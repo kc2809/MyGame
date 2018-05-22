@@ -5,29 +5,50 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.world.WorldController;
+import com.mygdx.game.world.WorldRenderer;
 
 public class MyGdxGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
+	WorldController worldController;
+	WorldRenderer worldRenderer;
+	private boolean paused;
+
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		worldController = new WorldController();
+		worldRenderer = new WorldRenderer(worldController);
+		paused = false;
 	}
 
 	@Override
 	public void render () {
+		if (!paused)
+			worldController.update(Gdx.graphics.getDeltaTime());
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+
+		worldRenderer.render();
+
 	}
-	
+
+	@Override
+	public void resize(int width, int height) {
+		worldRenderer.resize(width, height);
+	}
+
+	@Override
+	public void pause() {
+		paused = true;
+	}
+
+	@Override
+	public void resume() {
+		paused = false;
+	}
+
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+		worldRenderer.dispose();
 	}
 }
