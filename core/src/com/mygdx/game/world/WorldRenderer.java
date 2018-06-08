@@ -16,7 +16,8 @@ public class WorldRenderer implements Disposable {
     public WorldRenderer(WorldController worldController) {
         this.worldController = worldController;
         init();
-        this.worldController.createBoundWalls(camera);
+        worldController.init(camera);
+        // this.worldController.createBoundWalls(camera);
     }
 
     private void init() {
@@ -28,10 +29,13 @@ public class WorldRenderer implements Disposable {
     }
 
     public void render() {
-   //     worldController.cameraHelper.applyTo(camera);
+        worldController.cameraHelper.applyTo(camera);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-    //    worldController.sprite.draw(batch);
+//        worldController.sprite.draw(batch);
+//        worldController.sprites[0].draw(batch);
+//        worldController.sprites[1].draw(batch);
+        worldController.draw(batch);
         batch.end();
         debugRenderer.render(worldController.world, batch.getProjectionMatrix());
     }
