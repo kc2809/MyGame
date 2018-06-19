@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -17,6 +20,8 @@ public class Assets implements Disposable, AssetErrorListener {
     public AssetBunny bunny;
     public AssetRock rock;
     private AssetManager assetManager;
+    public Texture circle;
+    public Texture square;
 
     private Assets() {
     }
@@ -42,6 +47,8 @@ public class Assets implements Disposable, AssetErrorListener {
         // create game resource object
         bunny = new AssetBunny(atlas);
         rock = new AssetRock(atlas);
+        circle = createCircleTexture();
+        square = createSquareTexture();
     }
 
     @Override
@@ -71,5 +78,24 @@ public class Assets implements Disposable, AssetErrorListener {
             this.edge = textureAtlas.findRegion("rock_edge");
             this.middle = textureAtlas.findRegion("rock_middle");
         }
+    }
+
+    private Texture createCircleTexture() {
+        Pixmap pixmap = new Pixmap(100, 100, Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.drawCircle(pixmap.getWidth() / 2, pixmap.getHeight() / 2, pixmap.getWidth() / 2);
+        pixmap.fillCircle(pixmap.getWidth() / 2, pixmap.getHeight() / 2, pixmap.getWidth() / 2);
+        Texture circle = new Texture(pixmap);
+        pixmap.dispose();
+        return circle;
+    }
+
+    private Texture createSquareTexture() {
+        Pixmap pixmap = new Pixmap(200, 200, Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fillRectangle(0, 0, 200, 200);
+        Texture square = new Texture(pixmap);
+        pixmap.dispose();
+        return square;
     }
 }
