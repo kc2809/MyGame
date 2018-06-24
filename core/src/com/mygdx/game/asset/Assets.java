@@ -4,11 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.mygdx.game.util.Constants;
@@ -23,6 +23,9 @@ public class Assets implements Disposable, AssetErrorListener {
     public Texture circle;
     public Texture square;
 
+    public FileHandle effectFile;
+    public FileHandle imagesDir;
+
     private Assets() {
     }
 
@@ -30,6 +33,7 @@ public class Assets implements Disposable, AssetErrorListener {
         this.assetManager = assetManager;
         assetManager.setErrorListener(this);
         assetManager.load(Constants.TEXTURE_ATLAS_OBJECT, TextureAtlas.class);
+//        assetManager.load(Constants.TEXTURE_ATLAS_NUMBER, TextureAtlas.class);
         assetManager.finishLoading();
         Gdx.app.debug(TAG, "# of assets loaded: " + assetManager.getAssetNames() + " - " + assetManager.getAssetNames().size);
         assetManager.getAssetNames();
@@ -39,16 +43,25 @@ public class Assets implements Disposable, AssetErrorListener {
 
         TextureAtlas atlas = assetManager.get(Constants.TEXTURE_ATLAS_OBJECT);
 
+//        TextureAtlas atlasNumber = assetManager.get(Constants.TEXTURE_ATLAS_NUMBER);
+
         //enable texture filtering for pixel smoothing
-        for (Texture t : atlas.getTextures()) {
-            t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        }
+//        for (Texture t : atlas.getTextures()) {
+//            t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+//        }
+
 
         // create game resource object
         bunny = new AssetBunny(atlas);
         rock = new AssetRock(atlas);
         circle = createCircleTexture();
         square = createSquareTexture();
+
+        //File handler
+        effectFile = Gdx.files.internal("star_particle.p");
+        imagesDir = Gdx.files.internal("");
+
+
     }
 
     @Override
@@ -80,6 +93,15 @@ public class Assets implements Disposable, AssetErrorListener {
         }
     }
 
+    public class AssetNumber {
+        public final AtlasRegion number;
+
+        public AssetNumber(TextureAtlas textureAtlas, int num) {
+            this.number = textureAtlas.findRegion("num" + num);
+        }
+    }
+
+
     private Texture createCircleTexture() {
         Pixmap pixmap = new Pixmap(100, 100, Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
@@ -98,4 +120,6 @@ public class Assets implements Disposable, AssetErrorListener {
         pixmap.dispose();
         return square;
     }
+
+
 }

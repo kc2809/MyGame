@@ -7,14 +7,17 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.box2d.Box2dManager;
+import com.mygdx.game.effect.EffectManager;
 import com.mygdx.game.object.Ball;
 import com.mygdx.game.object.Level;
 import com.mygdx.game.object.Player;
+import com.mygdx.game.object.Trajectory;
 import com.mygdx.game.object.Walls;
 import com.mygdx.game.util.Constants;
 import com.mygdx.game.world.WorldContactListener;
@@ -32,20 +35,17 @@ public class MainGameScreen implements Screen, InputProcessor {
 
     Player player;
 
-    /*
-     game attribute
-     */
-    /*
-        0: can be fire
-        1: fire
-        2: waiting
-
-     */
     int fireFlag = 0;
     int count = 0;
     long timeAtFire;
 
+    Trajectory trajectory;
     //
+    private WorldContactListener contactListener;
+
+
+    private EffectManager effectManager;
+
     @Override
     public void show() {
         debugRenderer = new Box2DDebugRenderer();
@@ -55,8 +55,12 @@ public class MainGameScreen implements Screen, InputProcessor {
         camera.position.set(0, 0, 0);
         world = new World(new Vector2(0, 0), true);
 
+        trajectory = new Trajectory(viewport, 80);
+
         Gdx.input.setInputProcessor(this);
         initObject();
+
+
     }
 
     private void initObject() {
@@ -72,8 +76,16 @@ public class MainGameScreen implements Screen, InputProcessor {
 
         level = new Level(viewport, world);
 
-        world.setContactListener(new WorldContactListener());
+        contactListener = new WorldContactListener(this);
+        world.setContactListener(contactListener);
 
+        effectManager = new EffectManager();
+        level.stage.addActor(effectManager);
+
+    }
+
+    public void setEffectAtPosition(Vector2 position) {
+        effectManager.setEffectAtPosition(position.x, position.y);
     }
 
     public void nextRow() {
@@ -96,7 +108,12 @@ public class MainGameScreen implements Screen, InputProcessor {
         level.draw();
         level.update(delta);
         update(delta);
+
+        trajectory.draw();
+
+
         Box2dManager.getInstance().destroyBody(world);
+
     }
 
     private void update(float delta) {
@@ -104,7 +121,8 @@ public class MainGameScreen implements Screen, InputProcessor {
             if ((System.currentTimeMillis() - timeAtFire) > 500) {
                 Ball b = (Ball) player.getActors().get(count);
                 count++;
-                b.fire(40, 40);
+//                b.fire(40, 40);
+                b.fireWithVelocity(player.getVelocity());
                 if (count == player.getActors().size) {
                     fireFlag = 2;
                     count = 0;
@@ -112,6 +130,8 @@ public class MainGameScreen implements Screen, InputProcessor {
                 timeAtFire = System.currentTimeMillis();
             }
         }
+
+
     }
 
     @Override
@@ -163,12 +183,6 @@ public class MainGameScreen implements Screen, InputProcessor {
             level.moveOneRow();
         }
 
-        if (keycode == Keys.F) {
-//            fireFlag = true;
-            if(fireFlag != 0) return false;
-            fireFlag = 1;
-            player.resetWhenFireEventFinish();
-        }
         return false;
     }
 
@@ -184,8 +198,16 @@ public class MainGameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        player.addActor(new Ball(world));
-        System.out.println("stoutout");
+        System.out.println("firee");
+        Vector3 worldCoordinate = camera.unproject(new Vector3(screenX, screenY, 0));
+        Vector2 clickPint = new Vector2(worldCoordinate.x, worldCoordinate.y);
+
+
+        //
+        if (fireFlag != 0) return false;
+        fireFlag = 1;
+        player.setVelocityWithClickPoint(clickPint);
+        player.resetWhenFireEventFinish();
         return false;
     }
 
@@ -196,11 +218,18 @@ public class MainGameScreen implements Screen, InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        Vector3 worldCoordinate = camera.unproject(new Vector3(screenX, screenY, 0));
+        Vector2 clickPint = new Vector2(worldCoordinate.x, worldCoordinate.y);
+        trajectory.projected(player.positionToFire.cpy().add(new Vector2(0.25f, 0.25f)), clickPint);
         return false;
     }
 
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public void test() {
+        System.out.println("bach bach");
     }
 }

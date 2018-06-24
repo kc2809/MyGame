@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.mygdx.game.asset.Assets;
 import com.mygdx.game.screens.MainGameScreen;
+import com.mygdx.game.screens.MenuScreen;
 
 public class MyGdxGame extends Game {
 
@@ -11,6 +12,7 @@ public class MyGdxGame extends Game {
 	public void create () {
 		Assets.instance.init(new AssetManager());
 		setScreen(new MainGameScreen());
+//		setScreen(new MenuScreen());
 	}
 
 	@Override

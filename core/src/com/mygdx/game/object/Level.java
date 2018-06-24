@@ -6,13 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.effect.EffectManager;
 
 import static com.mygdx.game.util.Constants.SQUARE_HEIGHT;
 import static com.mygdx.game.util.Constants.SQUARE_WIDTH;
 import static com.mygdx.game.util.Constants.VIEWPORT_WIDTH;
 
 public class Level {
-    Stage stage;
+    public Stage stage;
     World world;
 
     int count = 0;
@@ -49,4 +50,5 @@ public class Level {
 //        stage.addAction(Actions.moveTo(0, -move * SQUARE_HEIGHT, 3));
         //move++;
     }
+
 }

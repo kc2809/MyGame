@@ -1,7 +1,10 @@
 package com.mygdx.game.object;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -10,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.asset.Assets;
+import com.mygdx.game.effect.EffectManager;
 
 import static com.mygdx.game.util.Constants.BALL_PHYSIC;
 import static com.mygdx.game.util.Constants.PPM;
@@ -21,8 +25,6 @@ public class Ball extends Actor {
     Body body;
     World world;
 
-    boolean updateByBody = true;
-
     public Ball(World world) {
         sprite = new Sprite(Assets.instance.circle);
         sprite.setSize(sprite.getWidth() / PPM, sprite.getHeight() / PPM);
@@ -30,7 +32,11 @@ public class Ball extends Actor {
         sprite.setPosition(0, 0);
         createPhysics();
         setBounds(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+
     }
+
+    boolean updateByBody = true;
+
 
     private void createPhysics() {
         BodyDef bodyDef = new BodyDef();
@@ -87,6 +93,9 @@ public class Ball extends Actor {
             setPosition(getX(), getY());
         }
 
+        if (body.getLinearVelocity().len() > 0 && body.getLinearVelocity().len() < 10) {
+            body.setLinearVelocity(body.getLinearVelocity().scl(10));
+        }
     }
 
     @Override
@@ -99,6 +108,12 @@ public class Ball extends Actor {
         updateByBody = true;
         body.setLinearVelocity(x, y);
     }
+
+    public void fireWithVelocity(Vector2 velocity) {
+        updateByBody = true;
+        body.setLinearVelocity(velocity);
+    }
+
 
     public void stop() {
         updateByBody = false;

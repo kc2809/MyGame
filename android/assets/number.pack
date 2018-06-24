@@ -1,0 +1,27 @@
+
+number.png
+size: 256,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+num0
+  rotate: false
+  xy: 70, 4
+  size: 64, 77
+  orig: 64, 77
+  offset: 0, 0
+  index: -1
+num1
+  rotate: false
+  xy: 136, 2
+  size: 58, 79
+  orig: 58, 79
+  offset: 0, 0
+  index: -1
+num2
+  rotate: false
+  xy: 2, 2
+  size: 66, 79
+  orig: 66, 79
+  offset: 0, 0
+  index: -1

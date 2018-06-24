@@ -33,7 +33,7 @@ public class WorldController extends InputAdapter {
        sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
         cameraHelper = new CameraHelper();
         createPhysics();
-        world.setContactListener(new WorldContactListener());
+//        world.setContactListener(new WorldContactListener());
     }
 
     public void update(float deltaTime) {
