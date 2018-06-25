@@ -58,7 +58,7 @@ public class Assets implements Disposable, AssetErrorListener {
         square = createSquareTexture();
 
         //File handler
-        effectFile = Gdx.files.internal("star_particle.p");
+        effectFile = Gdx.files.internal("square.party");
         imagesDir = Gdx.files.internal("");
 
 
@@ -103,7 +103,7 @@ public class Assets implements Disposable, AssetErrorListener {
 
 
     private Texture createCircleTexture() {
-        Pixmap pixmap = new Pixmap(100, 100, Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(50, 50, Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.drawCircle(pixmap.getWidth() / 2, pixmap.getHeight() / 2, pixmap.getWidth() / 2);
         pixmap.fillCircle(pixmap.getWidth() / 2, pixmap.getHeight() / 2, pixmap.getWidth() / 2);

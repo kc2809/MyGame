@@ -1,8 +1,6 @@
 package com.mygdx.game.object;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -13,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.asset.Assets;
-import com.mygdx.game.effect.EffectManager;
 
 import static com.mygdx.game.util.Constants.BALL_PHYSIC;
 import static com.mygdx.game.util.Constants.PPM;
@@ -24,26 +21,30 @@ public class Ball extends Actor {
     Sprite sprite;
     Body body;
     World world;
+    boolean updateByBody = true;
 
-    public Ball(World world) {
+    boolean isCreatePhysics = false;
+
+    public Ball(World world, Vector2 position) {
         sprite = new Sprite(Assets.instance.circle);
         sprite.setSize(sprite.getWidth() / PPM, sprite.getHeight() / PPM);
         this.world = world;
-        sprite.setPosition(0, 0);
+//        sprite.setPosition(0, 0);
+        sprite.setPosition(position.x, position.y);
         createPhysics();
         setBounds(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
-
     }
 
-    boolean updateByBody = true;
-
-
     private void createPhysics() {
+        if (world.isLocked()) {
+            isCreatePhysics = true;
+            return;
+        }
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyType.DynamicBody;
         bodyDef.position.set(sprite.getX() + sprite.getWidth() / 2, sprite.getY() + sprite.getHeight() / 2);
-
         body = world.createBody(bodyDef);
+        isCreatePhysics = false;
 
         CircleShape shape = new CircleShape();
         //  shape.setAsBox(sprite.getWidth()/2 , sprite.getHeight() /2 );
@@ -79,7 +80,10 @@ public class Ball extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-//        sprite.draw(batch);
+        if (isCreatePhysics) {
+            createPhysics();
+        }
+        sprite.draw(batch);
     }
 
     @Override

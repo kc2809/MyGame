@@ -37,6 +37,7 @@ public class WorldContactListener implements ContactListener {
             s = (Square) fixB.getBody().getUserData();
         }
         if (s != null) {
+//            screen.getPlayer().addNewBall();
             screen.setEffectAtPosition(s.getBody().getPosition());
 //            s.remove();
             s.descreaseValue();
@@ -66,7 +67,6 @@ public class WorldContactListener implements ContactListener {
         Fixture fixA = contact.getFixtureA();
         Fixture fixB = contact.getFixtureB();
         if (fixA.getBody().getUserData() == "botWall" || fixB.getBody().getUserData() == "botWall") {
-
             System.out.println("end contact");
         }
 

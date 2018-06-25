@@ -20,6 +20,7 @@ import com.mygdx.game.object.Player;
 import com.mygdx.game.object.Trajectory;
 import com.mygdx.game.object.Walls;
 import com.mygdx.game.util.Constants;
+import com.mygdx.game.util.VectorUtil;
 import com.mygdx.game.world.WorldContactListener;
 
 public class MainGameScreen implements Screen, InputProcessor {
@@ -66,13 +67,9 @@ public class MainGameScreen implements Screen, InputProcessor {
     private void initObject() {
         walls = new Walls(world, camera);
 
-//        player = new Stage(viewport);
-//        player.addActor(ball);
-
-        player = new Player(viewport, this);
-        player.addActor(new Ball(world));
-        player.addActor(new Ball(world));
-        player.addActor(new Ball(world));
+        player = new Player(viewport, this, world);
+        player.addNewBall();
+//        player.addActor(new Ball(world));
 
         level = new Level(viewport, world);
 
@@ -89,9 +86,12 @@ public class MainGameScreen implements Screen, InputProcessor {
     }
 
     public void nextRow() {
-        level.generateNextRow();
+//        level.generateNextRow();
         level.moveOneRow();
         fireFlag = 0;
+        player.addNewBall();
+        trajectory.projected(player.positionToFire, VectorUtil.VECTOR2_ZERO);
+        trajectory.setVisible();
     }
 
     @Override
@@ -139,6 +139,9 @@ public class MainGameScreen implements Screen, InputProcessor {
         viewport.update(width, height);
         camera.position.set(0, 0, 0);
         walls.setWallPositionByCamera(camera);
+        //set init position again
+        player.setInitPositon();
+        trajectory.projected(player.positionToFire, VectorUtil.VECTOR2_ZERO);
     }
 
     @Override
@@ -172,12 +175,12 @@ public class MainGameScreen implements Screen, InputProcessor {
             player.getActors().get(0).remove();
         }
         if (keycode == Keys.B) {
-            System.out.println("cac");
-            player.addActor(new Ball(world));
+//            player.addActor(new Ball(world));
+
         }
 
         if (keycode == Keys.C) {
-            level.generateNextRow();
+//            level.generateNextRow();
         }
         if (keycode == Keys.D) {
             level.moveOneRow();
@@ -208,19 +211,23 @@ public class MainGameScreen implements Screen, InputProcessor {
         fireFlag = 1;
         player.setVelocityWithClickPoint(clickPint);
         player.resetWhenFireEventFinish();
+        trajectory.setInvisible();
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        Vector3 worldCoordinate = camera.unproject(new Vector3(screenX, screenY, 0));
+        Vector2 clickPint = new Vector2(worldCoordinate.x, worldCoordinate.y);
+        trajectory.projected(player.positionToFire.cpy().add(new Vector2(0.25f, 0.25f)), clickPint);
         return false;
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        Vector3 worldCoordinate = camera.unproject(new Vector3(screenX, screenY, 0));
-        Vector2 clickPint = new Vector2(worldCoordinate.x, worldCoordinate.y);
-        trajectory.projected(player.positionToFire.cpy().add(new Vector2(0.25f, 0.25f)), clickPint);
+//        Vector3 worldCoordinate = camera.unproject(new Vector3(screenX, screenY, 0));
+//        Vector2 clickPint = new Vector2(worldCoordinate.x, worldCoordinate.y);
+//        trajectory.projected(player.positionToFire.cpy().add(new Vector2(0.25f, 0.25f)), clickPint);
         return false;
     }
 
@@ -231,5 +238,9 @@ public class MainGameScreen implements Screen, InputProcessor {
 
     public void test() {
         System.out.println("bach bach");
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

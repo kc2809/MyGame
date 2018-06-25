@@ -122,4 +122,7 @@ public class Square extends Actor {
 //        number.setRegion(Assets.instance.rock.edge);
 //    }
 
+    public void ds(int... args) {
+
+    }
 }
