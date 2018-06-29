@@ -18,6 +18,7 @@ import com.mygdx.game.object.Ball;
 import com.mygdx.game.object.Level;
 import com.mygdx.game.object.Player;
 import com.mygdx.game.object.Trajectory;
+import com.mygdx.game.object.UIObject;
 import com.mygdx.game.object.Walls;
 import com.mygdx.game.util.Constants;
 import com.mygdx.game.util.VectorUtil;
@@ -47,6 +48,10 @@ public class MainGameScreen implements Screen, InputProcessor {
 
     private EffectManager effectManager;
 
+    public UIObject uiObject;
+
+    public int ballBeAddedNextRow;
+
     @Override
     public void show() {
         debugRenderer = new Box2DDebugRenderer();
@@ -61,7 +66,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(this);
         initObject();
 
-
+        ballBeAddedNextRow = 0;
     }
 
     private void initObject() {
@@ -71,13 +76,15 @@ public class MainGameScreen implements Screen, InputProcessor {
         player.addNewBall();
 //        player.addActor(new Ball(world));
 
-        level = new Level(viewport, world);
+        level = new Level(this, viewport, world);
 
         contactListener = new WorldContactListener(this);
         world.setContactListener(contactListener);
 
         effectManager = new EffectManager();
-        level.stage.addActor(effectManager);
+        level.addActor(effectManager);
+
+        uiObject = new UIObject();
 
     }
 
@@ -87,11 +94,21 @@ public class MainGameScreen implements Screen, InputProcessor {
 
     public void nextRow() {
 //        level.generateNextRow();
+        System.out.println("NEXT ROWWWWW: " + player.getActors().size);
         level.moveOneRow();
-        fireFlag = 0;
-        player.addNewBall();
+
+        //   player.addNewBall();
+        player.addBalls(ballBeAddedNextRow);
+        // then reset it
+        ballBeAddedNextRow = 0;
+
+        //show trajectory again
         trajectory.projected(player.positionToFire, VectorUtil.VECTOR2_ZERO);
         trajectory.setVisible();
+        System.out.println(" after NEXT ROWWWWW: " + player.getActors().size);
+
+        //enable fire flag
+        fireFlag = 0;
     }
 
     @Override
@@ -106,7 +123,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         player.act(delta);
 
         level.draw();
-        level.update(delta);
+        level.act(delta);
         update(delta);
 
         trajectory.draw();
@@ -114,6 +131,7 @@ public class MainGameScreen implements Screen, InputProcessor {
 
         Box2dManager.getInstance().destroyBody(world);
 
+        uiObject.draw();
     }
 
     private void update(float delta) {
@@ -142,6 +160,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         //set init position again
         player.setInitPositon();
         trajectory.projected(player.positionToFire, VectorUtil.VECTOR2_ZERO);
+
     }
 
     @Override
@@ -210,7 +229,7 @@ public class MainGameScreen implements Screen, InputProcessor {
         if (fireFlag != 0) return false;
         fireFlag = 1;
         player.setVelocityWithClickPoint(clickPint);
-        player.resetWhenFireEventFinish();
+//        player.resetWhenFireEventFinish();
         trajectory.setInvisible();
         return false;
     }
@@ -219,7 +238,7 @@ public class MainGameScreen implements Screen, InputProcessor {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         Vector3 worldCoordinate = camera.unproject(new Vector3(screenX, screenY, 0));
         Vector2 clickPint = new Vector2(worldCoordinate.x, worldCoordinate.y);
-        trajectory.projected(player.positionToFire.cpy().add(new Vector2(0.25f, 0.25f)), clickPint);
+        trajectory.projected(player.positionToFire.cpy().add(new Vector2(0.125f, 0.125f)), clickPint);
         return false;
     }
 

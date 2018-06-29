@@ -21,7 +21,6 @@ public class Player extends Stage {
     public Player(Viewport viewport, Screen screen, World world) {
         super(viewport);
         this.mainGameScreen = (MainGameScreen) screen;
-//        positionToFire = new Vector2(0, 0);
         this.world = world;
         setInitPositon();
     }
@@ -32,7 +31,6 @@ public class Player extends Stage {
 
     public void setVelocityWithClickPoint(Vector2 clickPoint) {
         velocity = clickPoint.cpy().sub(positionToFire).nor().scl(SPEED);
-//        velocity = new Vector2(1,1).scl(40);
     }
 
     public void increteCountOnFire() {
@@ -51,8 +49,10 @@ public class Player extends Stage {
     public void eventBallTouchGround(Ball actor) {
         if (!isFirstBallTouchGround()) {
             //           actor.addAction(Actions.moveTo(positionToFire.x, positionToFire.y, 0.2f));
-            Action moveToAction = Actions.moveTo(positionToFire.x, positionToFire.y, 0.5f);
+            Action moveToAction = Actions.moveTo(positionToFire.x, positionToFire.y, 0.1f);
             actor.addAction(Actions.sequence(moveToAction, Actions.run(this::nextStep)));
+//            actor.addAction(moveToAction);
+       //     nextStep();
         } else {
             positionToFire = new Vector2(actor.getSprite().getX(), actor.getSprite().getY());
             nextStep();
@@ -61,15 +61,18 @@ public class Player extends Stage {
     }
 
     private void nextStep() {
-        countOnFire++;
-        if (countOnFire == this.getActors().size) {
+        System.out.println("count on fire : " + countOnFire);
+//        countOnFire++;
+        if (++countOnFire == this.getActors().size) {
             countOnFire = 0;
             mainGameScreen.nextRow();
         }
+        System.out.println(" after count on fire : " + countOnFire);
+
     }
 
     public void setInitPositon() {
-        positionToFire = new Vector2(0, -getCamera().viewportHeight / 2 + 1);
+        positionToFire = new Vector2(0, -getCamera().viewportHeight / 2 );
         if (this.getActors().size > 0) {
             for (int i = 0; i < this.getActors().size; ++i) {
                 Ball b = (Ball) this.getActors().get(i);
@@ -79,6 +82,12 @@ public class Player extends Stage {
     }
 
     public void addNewBall() {
-        this.addActor(new Ball(this.world, this.positionToFire));
+        this.addActor(new Ball(this.world, this.positionToFire,  (this.getActors().size + 1)));
+    }
+
+    public void addBalls(int numberOfBall) {
+        for (int i = 0; i < numberOfBall; ++i) {
+            this.addActor(new Ball(this.world, this.positionToFire, (this.getActors().size + 1)));
+        }
     }
 }

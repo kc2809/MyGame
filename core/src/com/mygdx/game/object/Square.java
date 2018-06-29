@@ -1,12 +1,9 @@
 package com.mygdx.game.object;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -16,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.asset.Assets;
 import com.mygdx.game.box2d.Box2dManager;
+import com.mygdx.game.screens.MainGameScreen;
 
 import java.util.Random;
 
@@ -25,36 +23,30 @@ import static com.mygdx.game.util.Constants.WORLD_PHYSIC;
 
 public class Square extends Actor {
 
+
     Sprite sprite;
     Body body;
     World world;
-
-    BitmapFont font;
+    MainGameScreen screen;
 
     int value;
 
     boolean createPhysics = false;
     Random r = new Random();
 
-    public Square(World world, float x, float y) {
+    BitmapFont font;
+
+    public Square(MainGameScreen screen, World world, float x, float y) {
         super();
+        this.screen = screen;
         value = r.nextInt(3) + 1;
         this.world = world;
         sprite = new Sprite(Assets.instance.square);
         sprite.setSize(sprite.getWidth() / PPM, sprite.getHeight() / PPM);
         sprite.setPosition(getX(), getY());
         createPhysics();
+        font = Assets.instance.font;
         setPosition(x, y);
-
-
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("CaviarDreams.ttf"));
-        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = 200;
-        parameter.characters = "lit pe wtf";
-
-        font = generator.generateFont(parameter);
-        font.setColor(Color.WHITE);
-        generator.dispose();
     }
 
     public Body getBody() {
@@ -95,6 +87,8 @@ public class Square extends Actor {
         body.setUserData(this);
 
         createPhysics = false;
+
+        sprite.setColor(Color.YELLOW);
     }
 
 
@@ -102,14 +96,15 @@ public class Square extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         sprite.draw(batch);
         setPosition(getX(), getY());
+        font.draw(batch, value+"", sprite.getX(), sprite.getY() + sprite.getHeight());
         if (createPhysics) createPhysics();
-        font.setColor(Color.WHITE);
-        font.draw(batch, "8", 0, 0);
+
     }
 
     @Override
     public boolean remove() {
         Box2dManager.getInstance().addBodyToDestroy(body);
+        screen.uiObject.increaseScore();
         return super.remove();
     }
 
@@ -122,7 +117,4 @@ public class Square extends Actor {
 //        number.setRegion(Assets.instance.rock.edge);
 //    }
 
-    public void ds(int... args) {
-
-    }
 }

@@ -37,7 +37,6 @@ public class EffectManager extends Actor {
             particleEffect.setPosition(x, y);
             particleEffect.start();
         });
-
     }
 
     private ParticleEffect newParticleEffectAtPosition(float x, float y) {

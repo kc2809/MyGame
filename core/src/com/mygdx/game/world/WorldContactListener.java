@@ -7,6 +7,8 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.mygdx.game.object.Ball;
+import com.mygdx.game.object.Item1;
+import com.mygdx.game.object.MoneyItem;
 import com.mygdx.game.object.Square;
 import com.mygdx.game.screens.MainGameScreen;
 
@@ -28,6 +30,27 @@ public class WorldContactListener implements ContactListener {
         Vector2 normal = contact.getWorldManifold().getNormal();
         Vector2 roundNormal = new Vector2(Math.round(normal.x), Math.round(normal.y));
 
+        if (fixA.getBody().getUserData() instanceof Item1 || fixB.getBody().getUserData() instanceof Item1) {
+//            System.out.println("dis me may");
+//            contact.setEnabled(false);
+            Item1 item1 = (Item1) ((fixA.getBody().getUserData() instanceof Item1
+                    ? fixA.getBody().getUserData()
+                    : fixB.getBody().getUserData()));
+            item1.remove();
+            return;
+        }
+
+        if (fixA.getBody().getUserData() instanceof MoneyItem || fixB.getBody().getUserData() instanceof MoneyItem) {
+//            System.out.println("dis me may");
+//            contact.setEnabled(false);
+            MoneyItem item1 = (MoneyItem) ((fixA.getBody().getUserData() instanceof MoneyItem
+                    ? fixA.getBody().getUserData()
+                    : fixB.getBody().getUserData()));
+            item1.remove();
+            return;
+        }
+
+
         Square s = null;
         if (fixA.getBody().getUserData() instanceof Square) {
             s = (Square) fixA.getBody().getUserData();
@@ -41,11 +64,12 @@ public class WorldContactListener implements ContactListener {
             screen.setEffectAtPosition(s.getBody().getPosition());
 //            s.remove();
             s.descreaseValue();
+            //   return;
         }
 
         Ball ball = fixA.getBody().getUserData() instanceof Ball ? (Ball) fixA.getBody().getUserData() : (Ball) fixB.getBody().getUserData();
 
-        if (fixA.getBody().getUserData() == "botWall" || fixB.getBody().getUserData() == "botWall") {
+        if ("botWall".equals(fixA.getBody().getUserData()) || "botWall".equals(fixB.getBody().getUserData())) {
             ball.stop();
             return;
         }
@@ -56,26 +80,16 @@ public class WorldContactListener implements ContactListener {
 
 
         if (fixA.getBody().getUserData() instanceof Square || fixB.getBody().getUserData() instanceof Square) {
-            System.out.println("aaaa");
+//            System.out.println("aaaa");
         }
-
     }
 
     @Override
     public void endContact(Contact contact) {
-
-        Fixture fixA = contact.getFixtureA();
-        Fixture fixB = contact.getFixtureB();
-        if (fixA.getBody().getUserData() == "botWall" || fixB.getBody().getUserData() == "botWall") {
-            System.out.println("end contact");
-        }
-
-
     }
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
-
     }
 
     @Override

@@ -25,7 +25,13 @@ public class Ball extends Actor {
 
     boolean isCreatePhysics = false;
 
-    public Ball(World world, Vector2 position) {
+    public boolean isProgress;
+
+    int name;
+
+    public Ball(World world, Vector2 position, int name) {
+        isProgress = false;
+        this.name = name;
         sprite = new Sprite(Assets.instance.circle);
         sprite.setSize(sprite.getWidth() / PPM, sprite.getHeight() / PPM);
         this.world = world;
@@ -52,7 +58,7 @@ public class Ball extends Actor {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 0.1f;
+//        fixtureDef.density = 0.1f;
         fixtureDef.filter.categoryBits = BALL_PHYSIC;
         fixtureDef.filter.maskBits = WORLD_PHYSIC;
 
@@ -109,20 +115,27 @@ public class Ball extends Actor {
     }
 
     public void fire(float x, float y) {
-        updateByBody = true;
+        //     updateByBody = true;
         body.setLinearVelocity(x, y);
     }
 
     public void fireWithVelocity(Vector2 velocity) {
+        isProgress = true;
         updateByBody = true;
         body.setLinearVelocity(velocity);
     }
 
 
     public void stop() {
-        updateByBody = false;
+        if(!isProgress) return;
+        System.out.println("STOP IS CALLL from ball :  " + name);
         body.setLinearVelocity(0, 0);
+        //  body.setTransform(new Vector2(body.getPosition().x, body.getPosition().y + getStage().getHeight()/100), 0);
+//        sprite.setPosition(body.getPosition().x - sprite.getWidth() / 2, body.getPosition().y - sprite.getHeight() / 2);
+
+        updateByBody = false;
         Player player = (Player) getStage();
         player.eventBallTouchGround(this);
+        isProgress = false;
     }
 }

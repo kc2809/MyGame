@@ -1,0 +1,159 @@
+
+circleeffect.png
+size: 2048,2048
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+sprites
+  rotate: false
+  xy: 2, 1514
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 20
+sprites
+  rotate: false
+  xy: 2, 1010
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 21
+sprites
+  rotate: false
+  xy: 506, 1514
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 6
+sprites
+  rotate: false
+  xy: 2, 506
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 7
+sprites
+  rotate: false
+  xy: 506, 1010
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 8
+sprites
+  rotate: false
+  xy: 1010, 1514
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 10
+sprites
+  rotate: false
+  xy: 2, 2
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 11
+sprites
+  rotate: false
+  xy: 506, 506
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 12
+sprites
+  rotate: false
+  xy: 1010, 1010
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 14
+sprites
+  rotate: false
+  xy: 1514, 1514
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 15
+sprites
+  rotate: false
+  xy: 506, 2
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 17
+sprites
+  rotate: false
+  xy: 1010, 506
+  size: 502, 502
+  orig: 502, 502
+  offset: 0, 0
+  index: 18
+sprites
+  rotate: false
+  xy: 1514, 1011
+  size: 502, 501
+  orig: 502, 501
+  offset: 0, 0
+  index: 2
+sprites
+  rotate: false
+  xy: 1010, 3
+  size: 502, 501
+  orig: 502, 501
+  offset: 0, 0
+  index: 3
+sprites
+  rotate: false
+  xy: 1514, 508
+  size: 502, 501
+  orig: 502, 501
+  offset: 0, 0
+  index: 4
+sprites
+  rotate: false
+  xy: 1514, 4
+  size: 501, 502
+  orig: 501, 502
+  offset: 0, 0
+  index: 5
+
+circleeffect2.png
+size: 2048,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+sprites
+  rotate: false
+  xy: 2, 506
+  size: 501, 502
+  orig: 501, 502
+  offset: 0, 0
+  index: 9
+sprites
+  rotate: false
+  xy: 2, 2
+  size: 501, 502
+  orig: 501, 502
+  offset: 0, 0
+  index: 13
+sprites
+  rotate: false
+  xy: 505, 506
+  size: 501, 502
+  orig: 501, 502
+  offset: 0, 0
+  index: 16
+sprites
+  rotate: false
+  xy: 505, 2
+  size: 501, 502
+  orig: 501, 502
+  offset: 0, 0
+  index: 19
+sprites
+  rotate: false
+  xy: 1008, 507
+  size: 501, 501
+  orig: 501, 501
+  offset: 0, 0
+  index: 1
