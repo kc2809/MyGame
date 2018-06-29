@@ -61,7 +61,7 @@ public class WorldContactListener implements ContactListener {
         }
         if (s != null) {
 //            screen.getPlayer().addNewBall();
-            screen.setEffectAtPosition(s.getBody().getPosition());
+//            screen.setEffectAtPosition(s.getBody().getPosition());
 //            s.remove();
             s.descreaseValue();
             //   return;

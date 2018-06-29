@@ -2,6 +2,7 @@ package com.mygdx.game.object;
 
 
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -17,6 +18,7 @@ import static com.mygdx.game.util.Constants.SQUARE_WIDTH;
 import static com.mygdx.game.util.Constants.VIEWPORT_WIDTH;
 
 public class Level extends Stage {
+    private static final int MAX_SQUARE_PER_ROW = 9;
     World world;
 
     int currentLevel = 0;
@@ -33,6 +35,7 @@ public class Level extends Stage {
         this.world = world;
         listLevels = new ArrayList<>();
         initLevel();
+        generateNextStep();
         //  generateLevelByNumber(currentLevel);
     }
 
@@ -45,8 +48,10 @@ public class Level extends Stage {
 //    }
 
     public void moveOneRow() {
-        if (isLevelFinish()) generateLevelByNumber(++currentLevel);
-        if (currentLevel > 0) currentLevel = 0;
+//        if (isLevelFinish()) generateLevelByNumber(++currentLevel);
+//        if (currentLevel > 0) currentLevel = 0;
+
+
         addActionToAllSquare();
     }
 
@@ -60,9 +65,16 @@ public class Level extends Stage {
     }
 
     private void addActionToAllSquare() {
+        int i = 0;
         for (Actor actor : this.getActors()) {
             if (actor instanceof Square || actor instanceof Item1 || actor instanceof MoneyItem) {
-                actor.addAction(Actions.moveTo(actor.getX(), actor.getY() - SQUARE_HEIGHT, 1));
+                if (i++ == 0) {
+                    Action moveToAction = Actions.moveTo(actor.getX(), actor.getY() - SQUARE_HEIGHT - 0.1f, 1);
+                    actor.addAction(Actions.sequence(moveToAction, Actions.run(this::generateNextStep)));
+                } else {
+                    actor.addAction(Actions.moveTo(actor.getX(), actor.getY() - SQUARE_HEIGHT -0.1f, 1));
+
+                }
             }
         }
     }
@@ -108,6 +120,32 @@ public class Level extends Stage {
         }
     }
 
+
+    private void generateNextStep() {
+        int value = random.nextInt(512);
+        //one value means one row
+        // value from [0, 512]
+        // generate 8 square based on binary value of it.
+        int mask = 0b1;
+        float y = getPositionForGenerate();
+        for (int i = 0; i < MAX_SQUARE_PER_ROW; ++i) {
+            float x = -VIEWPORT_WIDTH / 2 + 0.1f + SQUARE_WIDTH * i + 0.1f * i;
+            if ((value & mask) != 0) {
+                // add square if it is 1
+                Square s = new Square(screen, world, x, y);
+                this.addActor(s);
+            } else {
+                // 5% generate Item1
+                if (belowPercent(6)) {
+                    this.addActor(new Item1(world, x, y));
+                } else {
+                    this.addActor(new MoneyItem(world, x, y));
+                }
+            }
+            value = value >> 1;
+        }
+    }
+
     private boolean belowPercent(int percent) {
         if (random.nextInt(100) > percent) return false;
         return true;
@@ -123,4 +161,7 @@ public class Level extends Stage {
         ++screen.ballBeAddedNextRow;
     }
 
+    private float getPositionForGenerate() {
+        return getCamera().viewportHeight * 5 / 12 - 1.0f;
+    }
 }

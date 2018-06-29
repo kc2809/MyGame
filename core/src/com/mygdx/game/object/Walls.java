@@ -47,9 +47,9 @@ public class Walls {
     public void setWallPositionByCamera(OrthographicCamera camera) {
         left.setTransform(new Vector2(-camera.viewportWidth / 2, 0), 0);
         right.setTransform(new Vector2(camera.viewportWidth / 2, 0), 0);
-        top.setTransform(new Vector2(0, camera.viewportHeight / 2), 0);
         bottom.setTransform(new Vector2(0, -camera.viewportHeight / 2), 0);
-
+//        top.setTransform(new Vector2(0, camera.viewportHeight / 2), 0);
+        top.setTransform(new Vector2(0, camera.viewportHeight * 5 / 12), 0);
     }
 
     private Body createWall(Vector2 position, Vector2 start, Vector2 end, String name) {

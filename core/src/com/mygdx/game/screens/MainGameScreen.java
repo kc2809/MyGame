@@ -202,7 +202,7 @@ public class MainGameScreen implements Screen, InputProcessor {
 //            level.generateNextRow();
         }
         if (keycode == Keys.D) {
-            level.moveOneRow();
+//            level.moveOneRow();
         }
 
         return false;

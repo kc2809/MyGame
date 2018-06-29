@@ -110,6 +110,7 @@ public class Square extends Actor {
 
     public void descreaseValue() {
         if (--value != 0) return;
+        screen.setEffectAtPosition(body.getPosition());
         this.remove();
     }
 
